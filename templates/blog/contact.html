@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+    {% block content %}
+    <body>
+        <div class="head-bread">
+                <div class="container">
+                    <ol class="breadcrumb">
+                        <li><a href="{% url 'home' %}">Home</a></li>
+                        <li class="active">Contact</li>
+                    </ol>
+                </div>
+        </div>
+        <!-- contact -->
+        <div class="contact">
+            <div class="container">
+                <h3>Contact us</h3>
+                <div class="contact-content">
+                    <form method="post">
+                        {% csrf_token %}
+                        <p>Please enter the first letter with big letter</p>
+                        <input type="text" id="contact-name" name="name" class="textbox" value=" Your Name" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Your Name';}"><br><br>
+                        <p>Please enter your email correct</p>
+                        <input type="text" id="contact-email" name="email" class="textbox" value="Your E-Mail" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Your E-Mail';}"><br><br>
+                            <div class="clear"> </div>
+                        <div>
+                            <p>Please enter the first letter with big letter</p>
+                            <textarea value="Message:" id="contact-message" name="message" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Your Message ';}">Your Message</textarea><br>
+                        </div>	
+                    <div class="submit"> 
+                            <input class="btn btn-default cont-btn" type="submit" value="SEND " />
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </body>
+    {% endblock content %}
