@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container" style="max-width: 600px; margin: 60px auto; padding: 0 20px;">
+    <div class="card p-4 p-md-5 rounded-0 border border-secondary-subtle shadow-sm">
+        <h2 class="text-uppercase fw-bold mb-4" style="letter-spacing: 2px; font-size: 22px; border-bottom: 2px solid #111; padding-bottom: 10px;">
+            Profilni tahrirlash
+        </h2>
+        <form method="POST">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="mb-3">
+                    <label class="form-label text-uppercase text-muted small fw-bold" style="letter-spacing: 1px;">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <div class="text-danger small mt-1">{{ field.errors }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <div class="mt-4 d-flex gap-2">
+                <button type="submit" class="btn text-uppercase rounded-0 px-4 py-2" style="background-color: #111; color: #fff; font-size: 13px; letter-spacing: 1px; border: 1px solid #111;">
+                    Saqlash
+                </button>
+                <a href="{% url 'profile' %}" class="btn btn-outline-dark text-uppercase rounded-0 px-4 py-2" style="font-size: 13px; letter-spacing: 1px; border-radius: 0px;">
+                    Bekor qilish
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock content %}

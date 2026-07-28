@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container" style="max-width: 600px; margin: 60px auto; padding: 0 20px;">
+    <div class="card p-4 p-md-5 rounded-0 border border-secondary-subtle shadow-sm">
+        <h2 class="text-uppercase fw-bold mb-4" style="letter-spacing: 2px; font-size: 22px; border-bottom: 2px solid #111; padding-bottom: 10px;">
+            Buyurtmani yakunlash
+        </h2>
+
+        <div class="bg-light p-3 mb-4 border border-secondary-subtle">
+            <h6 class="text-uppercase fw-bold mb-2" style="font-size: 12px; letter-spacing: 1px;">Xarid tahlili:</h6>
+            {% for item in cart.items.all %}
+                <div class="d-flex justify-content-between small text-muted mb-1">
+                    <span>{{ item.product.name }} (x{{ item.quantity }})</span>
+                    <span>{{ item.get_cost }} {{ item.product.price_type }}</span>
+                </div>
+            {% endfor %}
+            <div class="d-flex justify-content-between fw-bold border-top pt-2 mt-2 text-dark">
+                <span>JAMI TO'LOV:</span>
+                <span class="text-danger">{{ cart.get_total_price }} UZS</span>
+            </div>
+        </div>
+
+        <form method="POST">
+            {% csrf_token %}
+            
+            <div class="mb-3">
+                <label class="form-label text-uppercase text-muted small fw-bold" style="letter-spacing: 1px;">Ismingiz</label>
+                <input type="text" name="name" class="form-control rounded-0 border-secondary-subtle" required placeholder="Masalan: Asadbek">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label text-uppercase text-muted small fw-bold" style="letter-spacing: 1px;">Telefon raqamingiz</label>
+                <input type="text" name="phone" class="form-control rounded-0 border-secondary-subtle" required placeholder="+998 (XX) XXX-XX-XX">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label text-uppercase text-muted small fw-bold" style="letter-spacing: 1px;">O'lchamingiz (Size)</label>
+                <select name="size" class="form-control rounded-0 border-secondary-subtle">
+                    <option value="39">39</option>
+                    <option value="40">40</option>
+                    <option value="41">41</option>
+                    <option value="42" selected>42</option>
+                    <option value="43">43</option>
+                    <option value="44">44</option>
+                </select>
+            </div>
+
+            <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<div class="mb-3">
+    <label class="form-label text-uppercase text-muted small fw-bold" style="letter-spacing: 1px;">Etkazib berish manzili (Xaritadan belgilang)</label>
+    
+    <div id="map" style="width: 100%; height: 300px; margin-bottom: 10px; border: 1px solid #ccc;"></div>
+    
+    <input type="hidden" id="map_location" name="map" required>
+    <p id="location_text" class="small text-success" style="font-weight: bold;"></p>
+</div>
+
+
+
+            <button type="submit" class="btn btn-block btn-dark" style="background-color: #111; color: #fff; padding: 12px; font-weight: bold; border-radius: 0;">
+    Buyurtmani tasdiqlash
+</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Toshkent koordinatasi bo'yicha xaritani ochish
+    var map = L.map('map').setView([41.311081, 69.240562], 12);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    var marker;
+
+    // Xarita bosilganda koordinatani olish
+    map.on('click', function(e) {
+        var lat = e.latlng.lat.toFixed(6);
+        var lng = e.latlng.lng.toFixed(6);
+
+        if (marker) {
+            marker.setLatLng(e.latlng);
+        } else {
+            marker = L.marker(e.latlng).addTo(map);
+        }
+
+        // Qiymatni yashirin inputga yozamiz
+        document.getElementById('map_location').value = lat + "," + lng;
+        document.getElementById('location_text').innerText = "Manzil belgilandi: " + lat + ", " + lng;
+    });
+</script>
+
+{% endblock content %}
