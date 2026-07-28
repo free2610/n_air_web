@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<body>
+
+    <div class="head-bread">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li class="active">LOGIN</li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- login-form -->
+    <div class="reg-form">
+        <div class="container">
+            <div class="reg">
+
+                <h3>Login Now</h3>
+                <p>Enter your account details to login.</p>
+                <p>If you don't have an account yet, <a href="{% url 'register' %}">register here</a></p>
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    <ul>
+                        <li class="text-info">Email or Username:</li>
+                        <li>
+                            <input type="text" id="login-username" name="username" value="">
+                        </li>
+                    </ul>
+
+                    <ul>
+                        <li class="text-info">Password:</li>
+                        <li>
+                            <input type="password" id="login-password" name="password" value="">
+                        </li>
+                    </ul>
+
+                    <input type="submit" id="login-submit" name="submit" value="Login">
+
+                    <p class="click">
+                        Forgot your password?
+                        <a href="{% url 'password_reset' %}" style="color: #111; text-decoration: underline;">Click here</a>
+                    </p>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+
+{% endblock content %}

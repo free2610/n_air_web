@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container" style="max-width: 900px; margin: 60px auto; padding: 0 20px;">
+    <div class="card p-4 p-md-5 rounded-0 border border-secondary-subtle shadow-sm">
+        <h2 class="text-uppercase fw-bold mb-4" style="letter-spacing: 2px; font-size: 22px; border-bottom: 2px solid #111; padding-bottom: 10px;">
+            Sizning Savatchangiz
+        </h2>
+
+        {% if cart.items.all %}
+            <div class="table-responsive">
+                <table class="table align-middle">
+    <thead>
+        <tr class="text-uppercase small text-muted" style="letter-spacing: 1px;">
+            <th>Mahsulot</th>
+            <th>Soni</th>
+            <th>Narxi</th>
+            <th>O'chirish</th> </tr>
+    </thead>
+    <tbody>
+        {% for item in cart.items.all %}
+            <tr>
+                <td>
+                    <div class="d-flex align-items-center gap-3">
+                        {% if item.product.image %}
+                            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" style="width: 60px; height: 60px; object-fit: cover; border: 1px solid #eee;">
+                        {% endif %}
+                        <div>
+                            <strong class="text-dark d-block text-uppercase">{{ item.product.name }}</strong>
+                            <small class="text-muted">{{ item.product.last_name }}</small>
+                        </div>
+                    </div>
+                </td>
+                <td>{{ item.quantity }} dona</td>
+                <td>{{ item.get_cost }} {{ item.product.price_type }}</td>
+                <td>
+                    <a href="{% url 'remove_from_cart' item.id %}" class="btn btn-sm btn-outline-danger rounded-0" style="padding: 2px 8px;">
+                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> O'chirish
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
+                <h4 class="text-uppercase fw-bold" style="font-size: 18px;">Umumiy xarid:</h4>
+                <h4 class="fw-bold text-danger">{{ cart.get_total_price }} USD</h4>
+            </div>
+
+            <div class="mt-4 d-flex gap-2">
+    <a href="{% url 'checkout_cart' %}" class="btn text-uppercase rounded-0 px-4 py-2" style="background-color: #111; color: #fff; font-size: 13px; letter-spacing: 1px; text-decoration: none; display: inline-block;">
+        Buyurtmani rasmiylashtirish
+    </a>
+    <a href="/" class="btn btn-outline-dark text-uppercase rounded-0 px-4 py-2" style="font-size: 13px; letter-spacing: 1px;">
+        Xaridni davom ettirish
+    </a>
+</div>
+        {% else %}
+            <div class="text-center py-5">
+                <p class="text-muted">Savatchangiz hozircha bo'sh.</p>
+                <a href="/" class="btn btn-dark text-uppercase rounded-0 px-4 py-2 mt-2" style="font-size: 13px;">
+                    Mahsulotlarni ko'rish
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock content %}

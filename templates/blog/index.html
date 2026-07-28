@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<body>
+    
+    <div class="header-end">
+        <div class="container">
+            <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                <ol class="carousel-indicators">
+                    <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                    <li data-target="#myCarousel" data-slide-to="1"></li>
+                    <li data-target="#myCarousel" data-slide-to="2"></li>
+                </ol>
+
+                <div class="carousel-inner" role="listbox">
+                    <div class="item active">
+                        {% if random_sneak %}
+                            <img src="{{ random_sneak.image.url }}" alt="...">
+                            <div class="carousel-caption car-re-posn">
+                                <h3>{{ random_sneak.title }}</h3>
+                                <h4>{{ random_sneak.subtitle }}</h4>
+                                <span class="color-bar"></span>
+                            </div>
+                        {% else %}
+                            <img src="{% static 'images/default-banner.jpg' %}" alt="...">
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <hr style="width: 100%; height: 3px; background: -webkit-gradient(linear, left top, right top, color-stop(1%, #4745d3), color-stop(12%, #4745d3), color-stop(29%, #5451c7), color-stop(29%, #5451c7), color-stop(57%, #b0a56e), color-stop(68%, #c1b45e), color-stop(100%, #ecdc34));">
+            <div class="clearfix"></div>
+        </div>
+    </div>
+
+    <div class="feel-fall">
+        <div class="container">
+            <div class="pull-left fal-box">
+                <div class="fall-left">
+                    <h3>Fall</h3>
+                    <img src="{% static 'images/f-l.png' %}" alt="/" class="img-responsive fl-img-wid">
+                    <p>Inspiration and innovation<br> for every athlete in the world</p>
+                    <span class="fel-fal-bar"></span>
+                </div>
+            </div>
+            <div class="pull-right fel-box">
+                <div class="feel-right">
+                    <h3>Feel</h3>
+                    <img src="{% static 'images/f-r.png' %}" alt="/" class="img-responsive fl-img-wid">
+                    <p>Inspiration and innovation<br> for every athlete in the world</p>
+                    <span class="fel-fal-bar2"></span>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+
+    <div class="shop-grid">
+        <div class="container">
+            
+            {% if query %}
+                <div class="col-md-12" style="margin-bottom: 20px;">
+                    <h3 class="text-uppercase" style="font-size: 18px; letter-spacing: 1px; font-weight: bold;">
+                        Qidiruv natijalari: "{{ query }}"
+                    </h3>
+                </div>
+            {% endif %}
+
+            {% for i in sneaker %}
+            <div class="col-md-4 grid-stn simpleCart_shelfItem" style="margin-bottom: 30px;">
+                <div class="ih-item square effect3 bottom_to_top">
+                    <div class="bottom-2-top">
+                        <div class="img">
+                            <img src="{{ i.image.url }}" alt="{{ i.name }}" class="img-responsive gri-wid">
+                        </div>
+                        <div class="info">
+                            <div class="pull-left styl-hdn">
+                                <h3 style="font-size: 14px;">{{ i.name }}</h3>
+                                <small style="color: #aaa; font-size: 11px;">{{ i.last_name }}</small>
+                            </div>
+                            <div class="pull-right styl-price">
+                                <p>
+                                    <a href="{% url 'add_to_cart' i.id %}" class="item_add">
+                                        <span class="glyphicon glyphicon-shopping-cart grid-cart" aria-hidden="true"></span> 
+                                        <span class="item_price">{{ i.price }} {{ i.price_type }}</span>
+                                    </a>
+                                </p>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="quick-view">
+                    <a href="{% url 'single' i.id %}">Batafsil ko'rish</a>
+                </div>
+            </div>
+            {% empty %}
+                <div class="col-md-12 text-center" style="padding: 60px 0;">
+                    <span class="glyphicon glyphicon-search" style="font-size: 40px; color: #ccc; margin-bottom: 15px;"></span>
+                    <h3 class="text-muted" style="font-weight: bold;">Hech qanday mahsulot topilmadi</h3>
+                    <p class="text-muted" style="margin-top: 5px;">Iltimos, so'zni to'g'ri kiritganingizni tekshiring yoki boshqa model qidirib ko'ring.</p>
+                    <a href="{% url 'home' %}" class="btn btn-default" style="border-radius: 0; margin-top: 15px; font-weight: bold; text-transform: uppercase;">Barcha mahsulotlar</a>
+                </div>
+            {% endfor %}
+            
+            <div class="clearfix"></div>
+        </div>
+    </div>
+
+</body>
+{% endblock content %}

@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+    {% block content %}
+    <body>
+        <div class="head-bread">
+            <div class="container">
+                <ol class="breadcrumb">
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li><a href="{% url 'register' %}">LOGIN</a></li>
+                    <li class="active">REGISTER</li>
+                </ol>
+            </div>
+        </div>
+        <!-- reg-form -->
+        <div class="reg-form">
+            <div class="container">
+                <div class="reg">
+                    <h3>Register Now</h3>
+                    <p>This register section in worked. Your datas will saved.</p>
+                    <p>If you have previously registered with us, <a href="/login/">click here</a></p>
+                    <form method="post">
+                        {% csrf_token %}
+                        <ul>
+                            <li class="text-info">Full Name: </li>
+                            <li><input type="text" id="register-name" name="name" value=""></li>
+                        </ul>
+                        <ul>
+                            <li class="text-info">Username: </li>
+                            <li><input type="text" id="register-lastname" name="name" value=""></li>
+                        </ul>				 
+                        <ul>
+                            <li class="text-info">Email: </li>
+                            <li><input type="text" id="register-email" name="email" value=""></li>
+                        </ul>
+                        <ul>
+                            <li class="text-info">Password: </li>
+                            <li><input type="password" id="register-password" name="password" value=""></li>
+                        </ul>
+                        <ul>
+                            <li class="text-info">Mobile Number:</li>
+                            <li><input type="text" id="register-phone" name="phone" value=""></li>
+                        </ul>						
+                        <input type="submit" id="register-submit" name="submit" value="Register Now">
+                        <p class="click">By clicking this button, you are agree to my  <a href="#">Policy Terms and Conditions.</a></p> 
+                    </form>
+                </div>
+            </div>
+        </div>
+    </body>
+
+    {% endblock content %}
