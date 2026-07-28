@@ -1,4 +1,4 @@
-﻿Django==5.0.4
+﻿Django==5.2.16
 Pillow==11.3.0
 django-jazzmin>=3.0.0,<3.1
 whitenoise==6.12.0
