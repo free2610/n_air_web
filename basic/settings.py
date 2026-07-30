@@ -12,47 +12,35 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
+import dj_database_url
+from dotenv import load_dotenv
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR / ".env")
+
+
+def env_bool(name, default=False):
+    return os.environ.get(name, str(default)).strip().lower() in {"1", "true", "yes", "on"}
+
+
+def env_list(name, default=""):
+    return [item.strip() for item in os.environ.get(name, default).split(",") if item.strip()]
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = 'django-insecure-zh6xay9ypw(7x2%^$x82prc8bwhykbioug3&-)4jjjen6k#jf%'
-
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG", "True") == "True"
-
-ALLOWED_HOSTS = ['*']
-# Test rejimi uchun xatni pochtaga emas, terminalga chiqaradi
-# Loyihaning login manzili (accounts/login/ xatoligini oldini olish uchun)
-LOGIN_URL = 'login'
-
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = 'kfree3360@gmail.com'  # O'zingizning Gmail manzilingiz
-# EMAIL_HOST_PASSWORD = 'lpsekfrczwclwjzm'       # Gmail'dan olingan Maxsus Ilova Paroli (App Password)
-# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-#7002107938448287
+DEBUG = env_bool("DEBUG", True)
 # Application definition
-
-
-BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get(
     "SECRET_KEY",
     "django-insecure-change-this-in-production"
 )
 
-ALLOWED_HOSTS = [
-    "127.0.0.1",
-    "localhost",
-    ".onrender.com",
-]
+ALLOWED_HOSTS = env_list("ALLOWED_HOSTS", "127.0.0.1,localhost,.onrender.com")
+CSRF_TRUSTED_ORIGINS = env_list("CSRF_TRUSTED_ORIGINS")
 
 LOGIN_URL = "login"
 
@@ -111,12 +99,25 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "basic.wsgi.application"
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+# Supabase Dashboard -> Connect bo'limidagi URI ni DATABASE_URL ga qo'ying.
+# DATABASE_URL yo'q bo'lsa faqat lokal SQLite ishlatiladi; bu dump olishni osonlashtiradi.
+DATABASE_URL = os.environ.get("DATABASE_URL")
+if DATABASE_URL:
+    DATABASES = {
+        "default": dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600,
+            conn_health_checks=True,
+            ssl_require=True,
+        )
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
 
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
@@ -137,11 +138,24 @@ STORAGES = {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        # Jazzmin admin templates use the ``vendor/bootswatch`` directory as a
+        # static URL.  A manifest storage only contains files (not directories),
+        # so it raises an exception while rendering every admin page.
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
     },
 }
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
+
+# Render/Supabase kabi production muhitida HTTPS reverse proxy orqali keladi.
+if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    SECURE_SSL_REDIRECT = env_bool("SECURE_SSL_REDIRECT", True)
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = int(os.environ.get("SECURE_HSTS_SECONDS", "31536000"))
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

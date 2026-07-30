@@ -29,4 +29,9 @@ urlpatterns = [
     path('password-reset-complete/', 
          auth_views.PasswordResetCompleteView.as_view(template_name='registration/password_reset_complete.html'), 
          name='password_reset_complete'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
+
+# Django development server media fayllarini xizmat qiladi. Productionda media
+# fayllarni Supabase Storage, S3 yoki boshqa doimiy object storage orqali bering.
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

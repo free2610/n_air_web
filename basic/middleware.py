@@ -6,6 +6,11 @@ class LoginRequiredMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
+        # Django admin has its own login and permission flow.  Do not redirect
+        # its URLs to the site's customer login page.
+        if request.path.startswith('/admin/'):
+            return self.get_response(request)
+
         if not request.user.is_authenticated:
             # Ruxsat berilgan barcha URL nomlari (Parolni tiklash sahifalari qo'shildi)
             allowed_names = [
